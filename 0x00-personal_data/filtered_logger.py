@@ -13,18 +13,8 @@ def filter_datum(fields: List[str],
     '''returns the log
        message obfuscated
     '''
-    msgs = message.split(separator)
-    msglist = []
-    for msg in msgs:
-        msg_fiels = msg.split("=")
-        if msg_fiels[0] in fields:
-            pattern = r'=(.*)'
-            replacement = rf'={redaction}'
-            new_msg = re.sub(pattern, replacement, msg)
-            msglist.append(new_msg)
-        else:
-            msglist.append(msg)
-    result = ""
-    for msg in msglist:
-        result = result + msg + separator
-    return result
+    for field in fields:
+        pattern = re.compile(fr'{re.escape(field)}=.*?{re.escape(separator)}')
+        replacement = f'{field}={redaction}{separator}'
+        message = re.sub(pattern, replacement, message)
+    return message
