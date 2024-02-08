@@ -5,6 +5,8 @@
 import re
 from typing import List
 import logging
+import os
+from mysql.connector import (connection)
 
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
@@ -52,3 +54,34 @@ def get_logger() -> logging.Logger:
     stream_handler.setFormatter(RedactingFormatter(PII_FIELDS))
     logger.addHandler(stream_handler)
     return logger
+
+
+def get_db() -> connection.MySQLConnection:
+    """returns a connector to the database"""
+    db_name = os.getenv('PERSONAL_DATA_DB_NAME')
+    username = os.getenv('PERSONAL_DATA_DB_USERNAME', 'root')
+    password = os.getenv('PERSONAL_DATA_DB_PASSWORD', '')
+    host = os.getenv('PERSONAL_DATA_DB_HOST', 'localhost')
+    return connection.MySQLConnection(
+            host=host,
+            username=username,
+            password=password,
+            database=db_name
+            )
+
+
+def main():
+    """main function"""
+    db = get_db()
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users;")
+    logger = get_logger()
+    for row in cursor:
+        line = ''
+        for key, value in row.items():
+            line += f'{key}={value}; '
+        logger.info(line)
+
+
+if __name__ == "__main__":
+    main()
