@@ -46,10 +46,10 @@ def get_logger() -> logging.Logger:
     '''return a Logger'''
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
-    logger.propagate(False)
     stdout = logging.StreamHandler(stream=sys.stdout)
     stdout.setLevel(logging.INFO)
     fmt = RedactingFormatter(PII_FIELDS)
     stdout.setFormatter(fmt)
     logger.StreamHandler(stdout)
+    logger.propagate(False)
     return logger
