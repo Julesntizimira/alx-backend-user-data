@@ -48,7 +48,6 @@ def get_logger() -> logging.Logger:
     logger.propagate(False)
     logger.setLevel(logging.INFO)
     stdout = logging.StreamHandler()
-    stdout.setLevel(logging.INFO)
     fmt = RedactingFormatter(PII_FIELDS)
     stdout.setFormatter(fmt)
     logger.addHandler(stdout)
