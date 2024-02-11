@@ -47,9 +47,9 @@ def get_logger() -> logging.Logger:
     logger = logging.getLogger("user_data")
     logger.propagate(False)
     logger.setLevel(logging.INFO)
-    stdout = logging.StreamHandler(stream=sys.stdout)
+    stdout = logging.StreamHandler()
     stdout.setLevel(logging.INFO)
-    fmt = RedactingFormatter.format(list(PII_FIELDS))
+    fmt = RedactingFormatter(PII_FIELDS)
     stdout.setFormatter(fmt)
     logger.addHandler(stdout)
     return logger
