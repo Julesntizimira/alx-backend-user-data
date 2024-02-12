@@ -15,12 +15,14 @@ class Auth:
             return True
         if not excluded_paths or len(excluded_paths) == 0:
             return True
-        if path[-1] == "/":
-            path = path[0:-1]
-        if path[-1] == "*":
-            path = path[0:-1]
+        if path[-1] != "/":
+            path = path + '/'
         for endpoint in excluded_paths:
-            if path in endpoint:
+            if endpoint[-1] == "*":
+                endpoint = endpoint[:-1]
+                if endpoint in path:
+                    return False
+            elif endpoint == path:
                 return False
         return True
 
