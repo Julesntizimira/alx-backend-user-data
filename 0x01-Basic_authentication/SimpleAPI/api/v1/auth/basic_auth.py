@@ -3,6 +3,7 @@
 BasicAuth class
 """
 from api.v1.auth.auth import Auth
+from typing import Tuple
 
 
 class BasicAuth(Auth):
@@ -34,3 +35,15 @@ class BasicAuth(Auth):
         except Exception:
             return None
         return decoded_utf_str
+
+    def extract_user_credentials(self,
+                                 decoded_base64_authorization_header:
+                                 str) -> Tuple[str, str]:
+        '''User credentials'''
+        if not decoded_base64_authorization_header:
+            return (None, None)
+        if not isinstance(decoded_base64_authorization_header, str):
+            return (None, None)
+        if ":" not in decoded_base64_authorization_header:
+            return (None, None)
+        return tuple(decoded_base64_authorization_header.split(":"))
