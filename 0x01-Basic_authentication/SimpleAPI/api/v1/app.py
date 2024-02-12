@@ -14,6 +14,27 @@ app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
+auth = None
+if os.getenv("AUTH_TYPE"):
+    from api.v1.auth.auth import Auth
+    auth = Auth()
+
+
+@app.before_request
+def before_request() -> str:
+    '''befor request fun'''
+    if not auth:
+        return
+    if auth.require_auth(request.path,
+                         ['/api/v1/status/', '/api/v1/unauthorized/',
+                          '/api/v1/forbidden/']) is False:
+        return
+    if not auth.authorization_header(request):
+        abort(401)
+    if not auth.current_user(request):
+        abort(403)
+
+
 @app.errorhandler(404)
 def not_found(error) -> str:
     """ Not found handler
