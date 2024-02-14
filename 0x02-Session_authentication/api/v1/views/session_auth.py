@@ -13,9 +13,9 @@ def session_authentication() -> str:
     '''session authantication'''
     email = request.form.get('email')
     password = request.form.get('password')
-    if not email:
+    if not email or len(email) == 0:
         return jsonify({"error": "email missing"}), 400
-    if not password:
+    if not password or len(password) == 0:
         return jsonify({"error": "password missing"}), 400
     try:
         user_list = User.search({'email': email})
