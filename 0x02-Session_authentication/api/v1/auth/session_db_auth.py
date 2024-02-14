@@ -5,7 +5,6 @@ from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
 import uuid
 from datetime import datetime, timedelta
-import os
 
 
 class SessionDBAuth(SessionExpAuth):
@@ -33,9 +32,9 @@ class SessionDBAuth(SessionExpAuth):
             return None
         usersession = usersession_list[0]
         created_at = usersession.created_at
-        '''if created_at + timedelta(seconds=self.session_duration
-                                  ) <= datetime.now():
-            return None'''
+        if created_at + timedelta(seconds=self.session_duration
+                                  ) <= datetime.utcnow():
+            return None
         user_id = usersession.user_id
         return user_id
 
