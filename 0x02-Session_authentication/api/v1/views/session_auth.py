@@ -9,7 +9,7 @@ import os
 
 @app_views.route('/auth_session/login/',
                  methods=['POST'], strict_slashes=False)
-def session_authentication():
+def session_authentication() -> str:
     '''session authantication'''
     email = request.form.get('email')
     password = request.form.get('password')
@@ -39,7 +39,7 @@ def session_authentication():
 
 @app_views.route('/auth_session/logout/',
                  methods=['DELETE'], strict_slashes=False)
-def session_logout():
+def session_logout() -> str:
     '''session logout'''
     from api.v1.app import auth
     if auth.destroy_session(request) is False:
