@@ -3,7 +3,9 @@
 """
 from api.v1.auth.session_exp_auth import SessionExpAuth
 from models.user_session import UserSession
+import uuid
 from datetime import datetime, timedelta
+import os
 
 
 class SessionDBAuth(SessionExpAuth):
@@ -12,8 +14,11 @@ class SessionDBAuth(SessionExpAuth):
         '''creates and stores new instance of UserSession
            overload super().create_session
         '''
-        session_id = super().create_session(user_id)
-        user_session = UserSession(user_id=user_id, session_id=session_id)
+        if not user_id:
+            return None
+        session_id = str(uuid.uuid4())
+        attr_dict = {'user_id': user_id, 'session_id': session_id}
+        user_session = UserSession(**attr_dict)
         user_session.save()
         return session_id
 
@@ -28,10 +33,9 @@ class SessionDBAuth(SessionExpAuth):
             return None
         usersession = usersession_list[0]
         created_at = usersession.created_at
-        super().__init__()
-        if created_at + timedelta(seconds=self.session_duration
+        '''if created_at + timedelta(seconds=self.session_duration
                                   ) <= datetime.now():
-            return None
+            return None'''
         user_id = usersession.user_id
         return user_id
 
