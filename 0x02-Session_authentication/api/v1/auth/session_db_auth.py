@@ -27,16 +27,19 @@ class SessionDBAuth(SessionExpAuth):
         '''
         if not session_id or not isinstance(session_id, str):
             return None
-        usersession_list = UserSession.search({'session_id': session_id})
-        if not usersession_list or len(usersession_list) == 0:
+        try:
+            usersession_list = UserSession.search({'session_id': session_id})
+            if not usersession_list or len(usersession_list) == 0:
+                return None
+            usersession = usersession_list[0]
+            created_at = usersession.created_at
+            if created_at + timedelta(seconds=self.session_duration
+                                    ) <= datetime.utcnow():
+                return None
+            user_id = usersession.user_id
+            return user_id
+        except Exception:
             return None
-        usersession = usersession_list[0]
-        created_at = usersession.created_at
-        if created_at + timedelta(seconds=self.session_duration
-                                  ) <= datetime.utcnow():
-            return None
-        user_id = usersession.user_id
-        return user_id
 
     def destroy_session(self, request=None) -> bool:
         '''destroys the UserSession based on
