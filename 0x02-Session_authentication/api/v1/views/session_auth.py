@@ -26,7 +26,7 @@ def session_authentication() -> str:
             if obj.is_valid_password(password):
                 user = obj
         if not user:
-            return jsonify({"error": "wrong password"}), 404
+            return jsonify({"error": "wrong password"}), 401
         from api.v1.app import auth
         session_id = auth.create_session(user.id)
         cookie_name = os.getenv('SESSION_NAME')
