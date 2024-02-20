@@ -43,7 +43,7 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Dict[str, str]) -> Union[User, NoReturn]:
+    def find_user_by(self, **kwargs: dict) -> Union[User, NoReturn]:
         """
         takes in arbitrary keyword arguments and
         returns the first row found in the users
@@ -59,7 +59,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: int, **kwargs: Dict[str, str]) -> None:
+    def update_user(self, user_id: int, **kwargs: dict) -> None:
         '''update user'''
         user = self.find_user_by(id=user_id)
         for key, val in kwargs.items():
