@@ -4,8 +4,8 @@ auth module
 """
 import bcrypt
 from db import DB
-from typing import TypeVar
 from user import User
+from uuid import uuid4
 
 
 def _hash_password(password: str) -> bytes:
@@ -41,9 +41,7 @@ class Auth:
 
     def _generate_uuid(self) -> str:
         '''return a string representation of a new UUID'''
-        import uuid
-        id = str(uuid.uuid4())
-        return id
+        return str(uuid4())
 
     def create_session(self, email: str) -> str:
         '''Get session ID'''
