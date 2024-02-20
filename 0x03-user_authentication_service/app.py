@@ -46,9 +46,9 @@ def login():
 @app.route('/logout', methods=['DELETE'], strict_slashes=False)
 def logout():
     '''logout'''
-    session_id = request.form.get('session_id')
+    session_id = request.cookies.get('session_id', None)
     user = AUTH.get_user_from_session_id(session_id=session_id)
-    if user:
+    if session_id and user:
         AUTH.destroy_session(session_id)
         return redirect('/')
     abort(403)
@@ -59,7 +59,7 @@ def get_profile():
     '''get user profile'''
     session_id = request.cookies.get('session_id', None)
     user = AUTH.get_user_from_session_id(session_id=session_id)
-    if user:
+    if session_id and user:
         return jsonify({"email": user.email}), 200
     abort(403)
 
