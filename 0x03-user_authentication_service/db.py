@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import TypeVar, Any
+from typing import Union, Any, NoReturn
 from user import Base, User
 
 
@@ -37,7 +37,7 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Any) -> User:
+    def find_user_by(self, **kwargs: Any) -> Union[User, NoReturn]:
         """
         takes in arbitrary keyword arguments and
         returns the first row found in the users
