@@ -2,7 +2,7 @@
 '''
 User model
 '''
-from sqlalchemy import Column, String, INTEGER 
+from sqlalchemy import Column, String, INTEGER
 from sqlalchemy.ext.declarative import declarative_base
 
 
