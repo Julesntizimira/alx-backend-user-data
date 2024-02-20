@@ -7,6 +7,12 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 from typing import Union, Any, NoReturn
 from user import Base, User
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
+
+
+User_attr = User.__dict__.keys()
+User_attr = [attr for attr in User_attr if not attr.startswith('_')]
 
 
 class DB:
@@ -44,22 +50,17 @@ class DB:
         table as filtered by the method's input arguments
         """
         for key, val in kwargs.items():
-            try:
-                user = self._session.query(User)\
-                    .filter(getattr(User, key) == val).first()
-            except Exception:
-                from sqlalchemy.exc import InvalidRequestError
+            if key not in User_attr:
                 raise InvalidRequestError
-            if not user:
-                from sqlalchemy.orm.exc import NoResultFound
-                raise NoResultFound
-            else:
-                return user
+            user = self._session.query(User)\
+                .filter(getattr(User, key) == val).first()
+            break
+        if not user:
+            raise NoResultFound
+        return user
 
     def update_user(self, user_id: int, **kwargs: Any) -> None:
         '''update user'''
-        User_attr = User.__dict__.keys()
-        User_attr = [attr for attr in User_attr if not attr.startswith('_')]
         user = self.find_user_by(id=user_id)
         for key, val in kwargs.items():
             if key not in User_attr:
