@@ -37,7 +37,7 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Any) -> TypeVar('User'):
+    def find_user_by(self, **kwargs: Any) -> User:
         """
         takes in arbitrary keyword arguments and
         returns the first row found in the users
