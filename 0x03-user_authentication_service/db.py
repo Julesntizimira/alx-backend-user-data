@@ -43,21 +43,23 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Dict[str, Any]) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """
         takes in arbitrary keyword arguments and
         returns the first row found in the users
         table as filtered by the method's input arguments
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).one()
-        except NoResultFound:
-            raise NoResultFound()
-        except InvalidRequestError:
-            raise InvalidRequestError()
+        for key, val in kwargs.items():
+            if key not in User_attr:
+                raise InvalidRequestError
+            user = self._session.query(User)\
+                .filter(getattr(User, key) == val).first()
+            break
+        if not user:
+            raise NoResultFound
         return user
 
-    def update_user(self, user_id: int, **kwargs: dict) -> None:
+    def update_user(self, user_id: int, **kwargs: Dict[str, Any]) -> None:
         '''update user'''
         user = self.find_user_by(id=user_id)
         for key, val in kwargs.items():
