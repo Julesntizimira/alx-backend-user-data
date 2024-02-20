@@ -5,6 +5,7 @@ auth module
 import bcrypt
 from db import DB
 from typing import TypeVar
+from user import User
 
 
 def _hash_password(password: str) -> bytes:
@@ -18,7 +19,7 @@ class Auth:
     def __init__(self):
         self._db = DB()
 
-    def register_user(self, email: str, password: str) -> TypeVar('User'):
+    def register_user(self, email: str, password: str) -> User:
         '''register user'''
         try:
             self._db.find_user_by(email=email)
@@ -54,7 +55,7 @@ class Auth:
         self._db.update_user(user.id, session_id=myid)
         return user.session_id
 
-    def get_user_from_session_id(self, session_id: str) -> TypeVar('User'):
+    def get_user_from_session_id(self, session_id: str) -> User:
         '''returns the corresponding User or None'''
         if not session_id:
             return None
