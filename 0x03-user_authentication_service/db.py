@@ -43,20 +43,18 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs: dict) -> Union[User, NoReturn]:
+    def find_user_by(self, **kwargs: Dict[str, str]) -> Union[User, NoReturn]:
         """
         takes in arbitrary keyword arguments and
         returns the first row found in the users
         table as filtered by the method's input arguments
         """
-        for key, val in kwargs.items():
-            if key not in User_attr:
-                raise InvalidRequestError
-            user = self._session.query(User)\
-                .filter(getattr(User, key) == val).first()
-            break
-        if not user:
-            raise NoResultFound
+        try:
+            user = self._session.query(User).filter_by(**kwargs).one()
+        except NoResultFound:
+            raise NoResultFound()
+        except InvalidRequestError:
+            raise InvalidRequestError()
         return user
 
     def update_user(self, user_id: int, **kwargs: dict) -> None:
