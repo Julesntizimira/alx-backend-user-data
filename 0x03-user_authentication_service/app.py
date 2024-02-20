@@ -43,15 +43,15 @@ def login():
     return resp
 
 
-@app.route('/logout', methods=['DELETE'], strict_slashes=False)
+@app.route('/sessions', methods=['DELETE'], strict_slashes=False)
 def logout():
     '''logout'''
     session_id = request.cookies.get('session_id', None)
     user = AUTH.get_user_from_session_id(session_id=session_id)
-    if session_id is None or user is None:
-        abort(403)
-    AUTH.destroy_session(session_id)
-    return redirect('/')
+    if session_id and user:
+        AUTH.destroy_session(session_id)
+        return redirect('/')
+    abort(403)
 
 
 @app.route('/profile', strict_slashes=False)
