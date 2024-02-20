@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
-from typing import Union, Any, NoReturn
+from typing import Union, Any, NoReturn, Dict
 from user import Base, User
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
@@ -43,7 +43,7 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs: str) -> Union[User, NoReturn]:
+    def find_user_by(self, **kwargs: Dict[str, Any]) -> Union[User, NoReturn]:
         """
         takes in arbitrary keyword arguments and
         returns the first row found in the users
@@ -59,7 +59,7 @@ class DB:
             raise NoResultFound
         return user
 
-    def update_user(self, user_id: int, **kwargs: str) -> None:
+    def update_user(self, user_id: int, **kwargs: Dict[str, Any]) -> None:
         '''update user'''
         user = self.find_user_by(id=user_id)
         for key, val in kwargs.items():
