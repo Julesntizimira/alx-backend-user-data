@@ -42,13 +42,9 @@ class DB:
         self._session.add(user)
         self.__session.commit()
         return user
-
+    
     def find_user_by(self, **kwargs: Dict[str, str]) -> User:
-        """
-        takes in arbitrary keyword arguments and
-        returns the first row found in the users
-        table as filtered by the method's input arguments
-        """
+        """Find a user in the database based on the specified criteria."""
         try:
             user = self._session.query(User).filter_by(**kwargs).one()
         except NoResultFound:
