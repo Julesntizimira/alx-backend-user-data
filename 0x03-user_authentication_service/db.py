@@ -43,7 +43,7 @@ class DB:
         self.__session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Dict[str, str]) -> Union[User, NoReturn]:
+    def find_user_by(self, **kwargs: Dict[str, str]) -> User:
         """
         takes in arbitrary keyword arguments and
         returns the first row found in the users
